@@ -2,6 +2,7 @@ package com.learntoflutter.flutter_embed_unity_android.unity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
@@ -105,6 +106,23 @@ class UnityPlayerSingleton private constructor (activity: Activity) : UnityPlaye
         }
 
         super.onWindowVisibilityChanged(visibility)
+    }
+
+    // This is a workaround for [#15](https://github.com/learntoflutter/flutter_embed_unity/issues/15)
+    // Android <9 crash - no non-static method UnityPlayerSingleton;.hidePreservedContent()
+    fun hidePreservedContent() {
+        when (Build.VERSION.SDK_INT) {
+            // For Android versions 1 to Oreo 8.1 (SDK 27)
+            in Build.VERSION_CODES.BASE..Build.VERSION_CODES.O_MR1 -> {
+                // manually call the private function using reflection.
+                UnityPlayer::class.java.declaredMethods
+                    .find { it.name == "hidePreservedContent" }
+                    ?.let {
+                        it.isAccessible = true
+                        it.invoke(this)
+                    }
+            }
+        }
     }
 
     // Overriding kill() was an experiment to try to resolve app closing / crashing when
