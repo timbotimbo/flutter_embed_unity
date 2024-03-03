@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.Keep
 import com.learntoflutter.flutter_embed_unity_android.constants.FlutterEmbedConstants.Companion.logTag
 import com.unity3d.player.UnityPlayer
 import io.flutter.Log
@@ -110,18 +111,18 @@ class UnityPlayerSingleton private constructor (activity: Activity) : UnityPlaye
 
     // This is a workaround for [#15](https://github.com/learntoflutter/flutter_embed_unity/issues/15)
     // Android <9 crash - no non-static method UnityPlayerSingleton;.hidePreservedContent()
+    // @Keep annotation tells the minifier not to remove or rename this element during compilation
+    @Keep
     fun hidePreservedContent() {
-        when (Build.VERSION.SDK_INT) {
-            // For Android versions 1 to Oreo 8.1 (SDK 27)
-            in Build.VERSION_CODES.BASE..Build.VERSION_CODES.O_MR1 -> {
-                // manually call the private function using reflection.
-                UnityPlayer::class.java.declaredMethods
-                    .find { it.name == "hidePreservedContent" }
-                    ?.let {
-                        it.isAccessible = true
-                        it.invoke(this)
-                    }
-            }
+        // For Android versions less than Pie (Android 9, API 28)
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            // manually call the private function using reflection.
+            UnityPlayer::class.java.declaredMethods
+                .find { it.name == "hidePreservedContent" }
+                ?.let {
+                    it.isAccessible = true
+                    it.invoke(this)
+                }
         }
     }
 
