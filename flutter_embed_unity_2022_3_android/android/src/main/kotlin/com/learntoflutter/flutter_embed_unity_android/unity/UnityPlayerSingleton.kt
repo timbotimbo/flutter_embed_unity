@@ -114,16 +114,13 @@ class UnityPlayerSingleton private constructor (activity: Activity) : UnityPlaye
     // @Keep annotation tells the minifier not to remove or rename this element during compilation
     @Keep
     fun hidePreservedContent() {
-        // For Android versions less than Pie (Android 9, API 28)
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            // manually call the private function using reflection.
-            UnityPlayer::class.java.declaredMethods
-                .find { it.name == "hidePreservedContent" }
-                ?.let {
-                    it.isAccessible = true
-                    it.invoke(this)
-                }
-        }
+        // manually call the private function using reflection.
+        UnityPlayer::class.java.declaredMethods
+            .find { it.name == "hidePreservedContent" }
+            ?.let {
+                it.isAccessible = true
+                it.invoke(this)
+            }
     }
 
     // Overriding kill() was an experiment to try to resolve app closing / crashing when
