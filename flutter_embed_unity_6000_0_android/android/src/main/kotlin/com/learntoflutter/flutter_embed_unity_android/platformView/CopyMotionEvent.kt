@@ -1,13 +1,12 @@
 // source https://gist.github.com/sebschaef/b803da53217c88e8c691aeed08602193
 
-package com.learntoflutter.flutter_embed_unity_android.unity
+package com.learntoflutter.flutter_embed_unity_android.platformView
 
 import android.view.MotionEvent
 
-/*
-  Copies a MotionEvent. Use the named parameters to modify immutable properties.
-  Don't forget to recycle the original event if it is not used anymore.
-*/
+// Copies a MotionEvent. Use the named parameters to modify immutable properties.
+// Don't forget to recycle the original event if it is not used anymore.
+
 fun MotionEvent.copy(
     downTime: Long = getDownTime(),
     eventTime: Long = getEventTime(),
