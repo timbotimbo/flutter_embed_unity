@@ -120,27 +120,20 @@ platform :ios, '12.0'
 ```
 
 
-## Gradle 7.2
+## Gradle, AGP, NDK, JDK versions
 
-Unity 2022.3 LTS [only supports Gradle 7.2 / Android Gradle Plugin (AGP) 7.1.2](https://docs.unity3d.com/Manual/android-gradle-overview.html), so you should use these versions in the Android part of your Flutter app to avoid build problems (especially if you are using Unity AR / XR). Do this by specifying **7.1.2** as the AGP version in `<your flutter app>/android/build.gradle`:
+Officially, [Unity 2022.3 is tested against the following versions of Gradle and AGP](https://docs.unity3d.com/2022.3/Documentation/Manual/android-gradle-overview.html):
 
-```
-buildscript {
-    ...
+| Unity Version                     | Gradle Version | Android Gradle Plug-in Version |
+|------------------------------------|----------------|--------------------------------|
+| 2022.3.38f1+                       | 7.5.1          | 7.4.2                          |
+| 2022.3.0f1 - 2022.3.37f1         | 7.2            | 7.1.2                          |
 
-    dependencies {
-		...
-        classpath 'com.android.tools.build:gradle:7.1.2'
-    }
-}
-```
+And [is tested against NDK version 23.1.7779620 and JDK 11](https://docs.unity3d.com/Manual/android-supported-dependency-versions.html).
 
-You will also need to specify that the related version of Gradle which works with AGP 7.1.2, which is Gradle **7.2**, should be used in `<your flutter app>/android/gradle/wrapper/gradle-wrapper.properties`:
+Anecdotal evidence suggests that it works well with projects compiled with different versions of gradle, AGP, NDK and JDK, however you should test thoroughly. There is [some guidance in the wiki on what combinations of versions may work](https://github.com/learntoflutter/flutter_embed_unity/wiki#android-only-choose-a-combination-of-gradle-agp-jdk-and-android-studio-which-works-for-you).
 
-```
-distributionUrl=https\://services.gradle.org/distributions/gradle-7.2-all.zip
-```
-
+Alternatively, you may want to investigate AAR compilation, which may be a solution if you are encountering too many version conflicts.
 
 
 ## Only 1 instance
@@ -547,6 +540,15 @@ EmbedUnityPreferences.messageFromUnityListeningBehaviour =
 ```
 
 Currently, having two instances of `EmbedUnity` on the same screen is not supported.
+
+
+# Advanced: AAR compilation for Android
+
+Unity 2022.3 is becoming quite old, and so it may increasingly become more difficult to manage dependency conflicts between Unity, Flutter, AGP, Gradle, JDK, NDK etc.
+
+An alternative solution may be to [compile the Unity project into an AAR](https://github.com/learntoflutter/flutter_embed_unity/wiki/Advanced:-AAR-compilation-for-Android) before importing into Flutter (thanks [@timbotimbo](https://github.com/timbotimbo)).
+
+See [the Wiki](https://github.com/learntoflutter/flutter_embed_unity/wiki/Advanced:-AAR-compilation-for-Android) for more information
 
 
 # Common issues
