@@ -1,3 +1,10 @@
+## 1.2.5
+
+26 Feb 2025
+
+* Updated README with more up to date advice regarding Gradle and AGP (see issue [#38](https://github.com/learntoflutter/flutter_embed_unity/issues/38) - thanks [@timbotimbo](https://github.com/timbotimbo))
+
+
 ## 1.2.4
 
 23 Dec 2024
