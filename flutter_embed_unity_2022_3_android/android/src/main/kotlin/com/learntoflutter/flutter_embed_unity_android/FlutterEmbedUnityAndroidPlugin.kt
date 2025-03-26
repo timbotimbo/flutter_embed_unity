@@ -79,8 +79,8 @@ class FlutterEmbedUnityAndroidPlugin : FlutterPlugin, ActivityAware {
     override fun onDetachedFromActivityForConfigChanges() {
         Log.w(
             logTag, "onDetachedFromActivityForConfigChanges - this means the Flutter activity " +
-                    "for your app was destroyed to process a configuration change. This scenario is not supported " +
-                    "and may lead to unexpected behaviour or crashes. You may be able to prevent configuration " +
+                    "for your app was destroyed to process a configuration change. This scenario can lead " +
+                    "to unexpected behaviour or crashes. You may be able to prevent configuration " +
                     "changes causing the activity to be destroyed by adding values to the android:configChanges " +
                     "attribute for your main activity in your app's AndroidManifest.xml. For example, if this " +
                     "happened on orientation change, add orientation|keyboardHidden|screenSize|screenLayout to " +
@@ -88,12 +88,10 @@ class FlutterEmbedUnityAndroidPlugin : FlutterPlugin, ActivityAware {
                     "https://developer.android.com/guide/topics/resources/runtime-changes#restrict-activity " +
                     "for more information"
         )
-        // This will be called if the Activity is destroyed / recreated due to a 'configuration change'.
-        // Not sure if this can be handled at all - UnityPlayer is designed to only run in it's own
-        // activity, on a separate process, and not to be reused
-        // See https://docs.unity3d.com/Manual/UnityasaLibrary-Android.html
-        // TODO(Is there any way to handle FlutterActivity onDestroy()?)
-
+        // Unloading Unity is important - it prevents the app from crashing if the user exits the app
+        // using the Android back button, then re-opens the app and navigates back to a screen with Unity
+        // (see https://github.com/learntoflutter/flutter_embed_unity/issues/39)
+        UnityPlayerSingleton.getInstance()?.unload()
         UnityPlayerSingleton.flutterActivity = null
         // Remove the lifecycle observer
         (activityPluginBinding?.lifecycle as? HiddenLifecycleReference)
@@ -116,11 +114,12 @@ class FlutterEmbedUnityAndroidPlugin : FlutterPlugin, ActivityAware {
 
     // ActivityAware
     override fun onDetachedFromActivity() {
-        Log.w(logTag, "onDetachedFromActivity - this means the Flutter activity " +
-                    "for your app was destroyed. This scenario is not supported")
-        // TODO(Is there any way to handle FlutterActivity onDestroy()?)
+        Log.i(logTag, "onDetachedFromActivity - the Flutter activity has been detached, unloading unity")
+        // Unloading Unity is important - it prevents the app from crashing if the user exits the app
+        // using the Android back button, then re-opens the app and navigates back to a screen with Unity
+        // (see https://github.com/learntoflutter/flutter_embed_unity/issues/39)
+        UnityPlayerSingleton.getInstance()?.unload()
         UnityPlayerSingleton.flutterActivity = null
-
         // Remove the lifecycle observer
         (activityPluginBinding?.lifecycle as? HiddenLifecycleReference)
             ?.lifecycle
