@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.learntoflutter.flutter_embed_unity_android_example"
+    namespace 'com.learntoflutter.flutter_embed_unity_android_example'
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
