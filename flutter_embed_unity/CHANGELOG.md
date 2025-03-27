@@ -1,3 +1,10 @@
+## 1.2.6-beta.2
+
+27 March 2025
+
+* Bump flutter_embed_unity_2022_3_android to 1.1.2-beta.2 to fix: ~~Unload~~ Destroy UnityPlayer when the main activity is detached from the plugin to prevent crash when re-opening the app. Fixes [#39](https://github.com/learntoflutter/flutter_embed_unity/issues/39) in more scenarios (including when EmbedUnity widget is not at the bottom of the route stack)
+
+
 ## 1.2.6-beta.1
 
 26 March 2025
