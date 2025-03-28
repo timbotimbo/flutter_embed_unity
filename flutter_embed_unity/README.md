@@ -342,6 +342,20 @@ unityStreamingAssets=
 
 > By default, Unity references `unityStreamingAssets` in it's exported project build.gradle, and provides the definition in the gradle.properties of the thin launcher app. Because we are using a Flutter app rather than the provided launcher, we need to add the same definition to our own gradle.properites, otherwise you will get a build error `Could not get unknown property 'unityStreamingAssets'`
 
+- (Optional) Unity's resources files are already compressed during the unity project export. To prevent them from being unnecessarily compressed again when your app is built (which results in increased load time of Unity at runtime), copy the `aaptOptions` block from the unity library's build.gradle `android/unityLibrary/build.gradle` to your app's build.gradle `android/app/build.gradle` (thanks [@RF103T](https://github.com/RF103T)). It goes inside the `android` block, so should look like this:
+
+```
+android {
+
+  ...
+  
+  aaptOptions {
+    noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
+    ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+  }
+}
+```
+> This can significantly increase the load speed of your Unity project. For more detail see [issue #32](https://github.com/learntoflutter/flutter_embed_unity/issues/32#issuecomment-2757284181)
 
 ## If you're using XR (VR / AR) on Android
 

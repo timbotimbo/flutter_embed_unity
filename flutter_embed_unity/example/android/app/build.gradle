@@ -58,6 +58,14 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    // Copied this aaptOptions block from unityLibrary build.gradle, it prevents unity assets
+    // being compressed twice, leading to faster load time.
+    // See https://github.com/learntoflutter/flutter_embed_unity/issues/32#issuecomment-2757284181
+    aaptOptions {
+        noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
 }
 
 flutter {
