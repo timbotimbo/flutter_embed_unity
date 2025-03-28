@@ -355,6 +355,10 @@ android {
   }
 }
 ```
+
+![Screenshot 2025-03-28 at 16 38 03](https://github.com/user-attachments/assets/f81693ae-3e19-4ecd-a794-6fbdd343bea4)
+
+
 > This can significantly increase the load speed of your Unity project. For more detail see [issue #32](https://github.com/learntoflutter/flutter_embed_unity/issues/32#issuecomment-2757284181)
 
 ## If you're using XR (VR / AR) on Android
