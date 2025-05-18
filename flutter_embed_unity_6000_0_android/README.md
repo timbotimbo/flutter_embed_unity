@@ -6,9 +6,7 @@ The Android implementation of [`flutter_embed_unity`][1].
 
 ### Import the package
 
-This package has been endorsed, meaning that you only need to add `flutter_embed_unity`
-as a dependency in your `pubspec.yaml`. It will be automatically included in your app
-when you depend on `package:flutter_embed_unity`.
+This package has not yet been endorsed, meaning that will need to add both `flutter_embed_unity` and `flutter_embed_unity_android` as a dependency in your `pubspec.yaml`.
 
 This is what the above means to your `pubspec.yaml`:
 
@@ -16,6 +14,7 @@ This is what the above means to your `pubspec.yaml`:
 ...
 dependencies:
   ...
+  flutter_embed_unity_6000_0_android: ^0.0.1
   flutter_embed_unity: ^0.0.1
   ...
 ```
@@ -27,7 +26,7 @@ dependency:
 ...
 dependencies:
   ...
-  flutter_embed_unity_2022_3_android: ^0.0.1
+  flutter_embed_unity_6000_0_android: ^0.0.1
   ...
 ```
 
