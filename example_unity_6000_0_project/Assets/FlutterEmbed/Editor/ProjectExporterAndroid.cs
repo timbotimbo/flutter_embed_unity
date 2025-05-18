@@ -27,6 +27,9 @@ internal class ProjectExporterAndroid : ProjectExporter
         //
         // This needs to be transformed into a single module (the unityLibrary part).
         // The launcher module is not needed, as the user's Flutter project's android part will be the 'launcher'.
+        //
+        // [UPDATE: Unity 6000.0.22 has moved the relevant string from launcher to library. Copy can be ignored]
+        //
         // However, we do need the string.xml file from the launcher, as this contains some strings which Unity
         // will expect to find (and will crash with android.content.res.Resources$NotFoundException if they don't exist)
         // So, first, copy strings.xml 
@@ -38,15 +41,20 @@ internal class ProjectExporterAndroid : ProjectExporter
         string stringResourcesFileToPath = new string[] {exportPath, "unityLibrary", "src", "main", "res", "values", "strings.xml"}
                 .Aggregate((a, b) => Path.Combine(a, b));
 
-        FileInfo stringsResourceFile = new FileInfo(stringsResourceFileFromPath);
+        FileInfo stringsResourceFileTo = new FileInfo(stringResourcesFileToPath);
 
-        if(!stringsResourceFile.Exists) {
-            ProjectExportHelpers.ShowErrorMessage($"Unexpected error: '{stringsResourceFile.FullName} not found");
-            return;
+        // Skip the move if the target exists (6000.0.22 and newer)
+        if (!stringsResourceFileTo.Exists) {
+            FileInfo stringsResourceFileFrom = new FileInfo(stringsResourceFileFromPath);
+
+            if (!stringsResourceFileFrom.Exists) {
+                ProjectExportHelpers.ShowErrorMessage($"Unexpected error: '{stringsResourceFileFrom.FullName} not found");
+                return;
+            }
+
+            stringsResourceFileFrom.MoveTo(stringResourcesFileToPath);
+            Debug.Log($"Moved {stringsResourceFileFromPath} to {stringResourcesFileToPath}");
         }
-
-        stringsResourceFile.MoveTo(stringResourcesFileToPath);
-        Debug.Log($"Moved {stringsResourceFileFromPath} to {stringResourcesFileToPath}");
 
         // The launcher folder can now be deleted
         DirectoryInfo launcherDirectory = new DirectoryInfo(Path.Combine(exportPath, "launcher"));
@@ -91,18 +99,27 @@ internal class ProjectExporterAndroid : ProjectExporter
         File.WriteAllText(androidManifestFile.FullName, androidManifestContents);
         Debug.Log($"Removed <activity> from {androidManifestFile.FullName}");
 
-        // Add the namespace 'com.unity3d.player' to unityLibrary\build.gradle
-        // for compatibility with Gradle 8
+        // Update the Unity build.gradle file
         FileInfo buildGradleFile = new FileInfo(Path.Combine(exportPath, "build.gradle"));
         if(!buildGradleFile.Exists) {
             ProjectExportHelpers.ShowErrorMessage($"Unexpected error: '{buildGradleFile.FullName} not found");
             return;
         }
         string buildGradleContents = File.ReadAllText(buildGradleFile.FullName);
+
+#if UNITY_6000_0_OR_NEWER      
+        // Fix reference to gradle file in the 'shared' directory.
+        buildGradleContents = Regex.Replace(buildGradleContents, @"\.\./shared/", "./shared/");
+        File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
+        Debug.Log($"Fixed ../../shared references in {buildGradleFile.FullName}");
+#else
+        // Add the namespace 'com.unity3d.player' to unityLibrary\build.gradle
+        // for compatibility with Gradle 8
         Regex regexAndroidBlock = new Regex(Regex.Escape("android {"));
         buildGradleContents = regexAndroidBlock.Replace(buildGradleContents, "android {\n\tnamespace 'com.unity3d.player'", 1);
         File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
         Debug.Log($"Added namespace 'com.unity3d.player' to {buildGradleFile.FullName} for Gradle 8 compatibility");
+#endif
 
         DirectoryInfo burstDebugInformation = new DirectoryInfo(Path.Join(exportPath, "..", "unityLibrary_BurstDebugInformation_DoNotShip"));
         if(burstDebugInformation.Exists) {

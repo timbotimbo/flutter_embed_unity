@@ -32,9 +32,18 @@ internal class ProjectExportChecker
     {
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
         {
-            ProjectExportHelpers.ShowErrorMessage("Can't export until you change the build target to Android: see File -> Build settings -> Platform, then Switch Target");
+            ProjectExportHelpers.ShowErrorMessage("Can't export until you change the build target to Android: see File -> Build Profiles -> Platform, then Switch Target");
             return ProjectExportCheckerResult.Failure();
         }
+
+        // Check the Application Entry Point setting introduced in Unity 6000.
+#if UNITY_ANDROID && UNITY_6000_0_OR_NEWER
+        if (PlayerSettings.Android.applicationEntry != AndroidApplicationEntry.Activity)
+        {
+            ProjectExportHelpers.ShowErrorMessage("Can't export until you change the 'Application Entry Point' to 'Activity'. \nFile -> Build Profiles -> Player Settings -> Other Settings -> Application Entry Point.");
+            return ProjectExportCheckerResult.Failure();
+        }
+#endif
 
         // Because Debug.Log does not work until after the build, collect any log messages to show at the end:
         List<string> precheckWarnings = new();
@@ -70,7 +79,7 @@ internal class ProjectExportChecker
     {
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.iOS)
         {
-            ProjectExportHelpers.ShowErrorMessage("Can't export until you change the build target to iOS: see File -> Build settings -> Platform, then Switch Target");
+            ProjectExportHelpers.ShowErrorMessage("Can't export until you change the build target to iOS: see File -> Build Profiles -> Platform, then Switch Target");
             return ProjectExportCheckerResult.Failure();
         }
 
@@ -96,8 +105,8 @@ internal class ProjectExportChecker
 
     private bool PreCheckCommon(ref List<string> precheckWarnings, NamedBuildTarget namedBuildTarget, BuildTargetGroup buildTargetGroup)
     {
-#if !UNITY_2022_3
-        ProjectExportHelpers.ShowErrorMessage("This plugin only supports Unity 2022.3 LTS (Long Term Support).");
+#if !UNITY_6000
+        ProjectExportHelpers.ShowErrorMessage("This plugin only supports Unity 6000.0 .");
         return false;
 #endif
 
