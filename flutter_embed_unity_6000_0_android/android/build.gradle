@@ -2,14 +2,14 @@ group 'com.learntoflutter.flutter_embed_unity'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.8.20'
+    ext.kotlin_version = '2.1.20'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.7.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -27,15 +27,15 @@ apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     namespace 'com.learntoflutter.flutter_embed_unity_android'
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     sourceSets {
@@ -44,7 +44,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 22
+        minSdkVersion 23
         // Add proguard rules for the plugin code, these are needed to prevent
         // the plugin breaking (reflection is used when passing messages between
         // Flutter and Unity). consumerProguardFiles are combined with the consuming
