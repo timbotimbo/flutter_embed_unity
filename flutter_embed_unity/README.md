@@ -302,6 +302,13 @@ dependencies {
     implementation project(':unityLibrary')
 }
 ```
+```kotlin
+// alternative for build.gradle.kts
+dependencies {
+    implementation(project(":unityLibrary"))
+}
+```
+
 
 ![5](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/04e44ff4-755c-457b-9267-d9c4735559fc)
 
@@ -310,6 +317,10 @@ dependencies {
 - Add the exported unity project to the gradle build by including it in `<your flutter project>/android/settings.gradle`:
 ```
 include ':unityLibrary'
+```
+```kotlin
+// alternative for settings.gradle.kts
+include(":unityLibrary")
 ```
 
 ![6](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/11721c31-2d76-4451-81bf-c0a9fa4bd62e)
@@ -325,6 +336,19 @@ allprojects {
         // Add this:
         flatDir {
             dirs "${project(':unityLibrary').projectDir}/libs"
+        }
+    }
+}
+```
+```kotlin
+// alternative for build.gradle.kts
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        // Add this:
+        flatDir {
+            dirs(file("${project(":unityLibrary").projectDir}/libs"))
         }
     }
 }
@@ -365,7 +389,9 @@ android {
 
 If you are using XR features in Unity (eg ARFoundation) you need to perform some additional configuration on your project. First, make sure you check Unity's project validation checks: in your Unity project, go to `Project Settings -> XR Plug-in Management -> Project Validation`, and fix any problems.
 
-- Add `include ':unityLibrary:xrmanifest.androidlib'` to your `android/settings.gradle`:
+- Add `include ':unityLibrary:xrmanifest.androidlib'` to your `android/settings.gradle` or  
+`include(":unityLibrary:xrmanifest.androidlib")` for `android/settings.gradle.kts`:
+
 
 ![6b](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/3a51afd3-0d3c-4fe9-8bc1-be67daff6e74)
 
