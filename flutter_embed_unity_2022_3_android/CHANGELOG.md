@@ -1,3 +1,10 @@
+## 1.1.2
+
+21 May 2025
+
+Production release of 1.1.2: Destroy UnityPlayer when the main activity is detached from the plugin to prevent crash when re-opening the app. Fixes [#39](https://github.com/learntoflutter/flutter_embed_unity/issues/39)
+
+
 ## 1.1.2-beta.2
 
 27 March 2025
