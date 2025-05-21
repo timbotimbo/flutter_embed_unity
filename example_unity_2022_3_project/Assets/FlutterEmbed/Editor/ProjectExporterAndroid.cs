@@ -99,10 +99,28 @@ internal class ProjectExporterAndroid : ProjectExporter
             return;
         }
         string buildGradleContents = File.ReadAllText(buildGradleFile.FullName);
-        Regex regexAndroidBlock = new Regex(Regex.Escape("android {"));
-        buildGradleContents = regexAndroidBlock.Replace(buildGradleContents, "android {\n\tnamespace 'com.unity3d.player'", 1);
-        File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
-        Debug.Log($"Added namespace 'com.unity3d.player' to {buildGradleFile.FullName} for Gradle 8 compatibility");
+        // some unity versions might already include it
+        if(!buildGradleContents.Contains("namespace")) {
+            Regex regexAndroidBlock = new Regex(Regex.Escape("android {"));
+            buildGradleContents = regexAndroidBlock.Replace(buildGradleContents, "android {\n\tnamespace 'com.unity3d.player'", 1);
+            File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
+            Debug.Log($"Added namespace 'com.unity3d.player' to {buildGradleFile.FullName} for Gradle 8 compatibility");
+        }
+		
+        // (optional) Add the namespace 'com.UnityTechnologies.XR.Manifest' to unityLibrary\xrmanifest.androidlib\build.gradle
+        // for compatibility with Gradle 8
+        FileInfo xrBuildGradleFile = new FileInfo(Path.Combine(exportPath, "xrmanifest.androidlib", "build.gradle"));
+        if(xrBuildGradleFile.Exists) {
+            string xrBuildGradleContents = File.ReadAllText(xrBuildGradleFile.FullName);
+            // some unity versions might already include it
+            if(!xrBuildGradleContents.Contains("namespace")) {
+                Regex regexAndroidBlock = new Regex(Regex.Escape("android {"));
+                xrBuildGradleContents = regexAndroidBlock.Replace(xrBuildGradleContents, "android {\n\tnamespace 'com.UnityTechnologies.XR.Manifest'", 1);
+                File.WriteAllText(xrBuildGradleFile.FullName, xrBuildGradleContents);
+                Debug.Log($"Added namespace 'com.UnityTechnologies.XR.Manifest' to {xrBuildGradleFile.FullName} for Gradle 8 compatibility");
+            }
+        }
+        
 
         DirectoryInfo burstDebugInformation = new DirectoryInfo(Path.Join(exportPath, "..", "unityLibrary_BurstDebugInformation_DoNotShip"));
         if(burstDebugInformation.Exists) {
