@@ -296,12 +296,14 @@ The Unity project is now ready to use, but we still haven't actually linked it t
 
 ### Android
 
-- Add the Unity project as a dependency to your app by adding the following to `<your flutter project>/android/app/build.gradle`:
+- Add the Unity project as a dependency to your app by adding the following to `<your flutter project>/android/app/build.gradle`. If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
 ```
 dependencies {
     implementation project(':unityLibrary')
 }
 ```
+
+Alternatively if you created your project using Flutter 3.29 or later, or have migrated to Kotin gradle DSL:
 ```kotlin
 // alternative for build.gradle.kts
 dependencies {
@@ -326,7 +328,7 @@ include(":unityLibrary")
 ![6](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/11721c31-2d76-4451-81bf-c0a9fa4bd62e)
 
 
-Add the Unity export directory as a repository so gradle can find required libraries / AARs etc in `<your flutter project>/android/build.gradle`:
+Add the Unity export directory as a repository so gradle can find required libraries / AARs etc in `<your flutter project>/android/build.gradle`. If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
 
 ```
 allprojects {
@@ -340,6 +342,8 @@ allprojects {
     }
 }
 ```
+
+Alternatively if you created your project using Flutter 3.29 or later, or have migrated to Kotin gradle DSL:
 ```kotlin
 // alternative for build.gradle.kts
 allprojects {
