@@ -1,3 +1,10 @@
+## 1.1.3
+
+22 May 2025
+
+Updated example project to support Flutter 3.29, Gradle 8 Java 11, updated native plugin project's gradle to use Kotlin DSL, Java 11, Gradle 8.9, AGP 8.7, compile SDK 35
+
+
 ## 1.1.2
 
 21 May 2025

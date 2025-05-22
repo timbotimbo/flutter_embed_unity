@@ -1,3 +1,15 @@
+## 1.2.7
+
+22 May 2025
+
+* Updated example project to support Flutter 3.29, Gradle 8 Java 11. Bump flutter_embed_unity_2022_3_android to 1.1.3 for the same.
+* Unity export fixed to prevent duplicate namespace being added to `unityLibrary/build.gradle` when using latest version of Unity 2022.3 ([#36](https://github.com/learntoflutter/flutter_embed_unity/pull/36) thanks [@timbotimbo](https://github.com/timbotimbo)).
+* Updates to README with alternative gradle modification syntax for Kotlin DSL ([#37](https://github.com/learntoflutter/flutter_embed_unity/pull/37) thanks [@timbotimbo](https://github.com/timbotimbo))
+* Unity export improved to automatically remove ndkPath from `unityLibrary/build.gradle` to prevent build error using latest version with flutter 3.29
+
+To upgrade to the latest Unity export build script for Android, either manually replace the contents of your Unity project's `Assets/FlutterEmbed/Editor/ProjectExporterAndroid.cs` with the [content from the 1.2.7 release branch on Github](https://github.com/learntoflutter/flutter_embed_unity/blob/rel/1.2.7/example_unity_2022_3_project/Assets/FlutterEmbed/Editor/ProjectExporterAndroid.cs), or grab the `flutter_embed_unity_2022_3.unitypackage` asset from [1.2.7 release](https://github.com/learntoflutter/flutter_embed_unity/releases) and re-import into your Unity project
+
+
 ## 1.2.6
 
 21 May 2025
