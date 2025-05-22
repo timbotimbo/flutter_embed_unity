@@ -87,7 +87,7 @@ internal class ProjectExporterAndroid : ProjectExporter
         }
         string androidManifestContents = File.ReadAllText(androidManifestFile.FullName);
         Regex regexActivityTag = new Regex(@"<activity.*>(\s|\S)+?</activity>", RegexOptions.Multiline);
-        androidManifestContents = regexActivityTag.Replace(androidManifestContents, "");
+        androidManifestContents = regexActivityTag.Replace(androidManifestContents, "<!-- activity block was removed by flutter_embed_unity exporter -->");
         File.WriteAllText(androidManifestFile.FullName, androidManifestContents);
         Debug.Log($"Removed <activity> from {androidManifestFile.FullName}");
 
@@ -102,7 +102,7 @@ internal class ProjectExporterAndroid : ProjectExporter
         // some unity versions might already include it
         if(!buildGradleContents.Contains("namespace")) {
             Regex regexAndroidBlock = new Regex(Regex.Escape("android {"));
-            buildGradleContents = regexAndroidBlock.Replace(buildGradleContents, "android {\n\tnamespace 'com.unity3d.player'", 1);
+            buildGradleContents = regexAndroidBlock.Replace(buildGradleContents, "android {\n\tnamespace 'com.unity3d.player'  // namespace was added by flutter_embed_unity exporter to support Gradle 8", 1);
             File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
             Debug.Log($"Added namespace 'com.unity3d.player' to {buildGradleFile.FullName} for Gradle 8 compatibility");
         }
@@ -115,12 +115,28 @@ internal class ProjectExporterAndroid : ProjectExporter
             // some unity versions might already include it
             if(!xrBuildGradleContents.Contains("namespace")) {
                 Regex regexAndroidBlock = new Regex(Regex.Escape("android {"));
-                xrBuildGradleContents = regexAndroidBlock.Replace(xrBuildGradleContents, "android {\n\tnamespace 'com.UnityTechnologies.XR.Manifest'", 1);
+                xrBuildGradleContents = regexAndroidBlock.Replace(xrBuildGradleContents, "android {\n\tnamespace 'com.UnityTechnologies.XR.Manifest'  // namespace was added by flutter_embed_unity exporter to support Gradle 8", 1);
                 File.WriteAllText(xrBuildGradleFile.FullName, xrBuildGradleContents);
                 Debug.Log($"Added namespace 'com.UnityTechnologies.XR.Manifest' to {xrBuildGradleFile.FullName} for Gradle 8 compatibility");
             }
         }
-        
+
+        // Using project templates created with Flutter 3.29 or later now causes a build error due to an NDK version conflict.
+        // For example:
+        //
+        // android.ndkVersion is [27.0.12077973] but android.ndkPath /Applications/Unity/Hub/Editor/2022.3.62f1/PlaybackEngines/AndroidPlayer/NDK 
+        // refers to a different version [23.1.7779620]
+        //
+        // To resolve this we now need to remove the explicit reference to NDK 23.1 in unityLibrary\build.gradle, and allow the higher version
+        // used by the Flutter project to take precendence. To do this, remove the line which begins with ndkPath, for example:
+        // ndkPath "/Applications/Unity/Hub/Editor/2022.3.62f1/PlaybackEngines/AndroidPlayer/NDK"  (the exact path will vary)
+        Regex regexNDKPath = new Regex(@"^.*ndkPath.*$", RegexOptions.Multiline);
+        if (regexNDKPath.IsMatch(buildGradleContents))
+        {
+            buildGradleContents = regexNDKPath.Replace(buildGradleContents, "\t// ndkPath was removed by flutter_embed_unity exporter");
+            File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
+            Debug.Log($"ndkPath property was removed from {buildGradleFile.FullName}");
+        }
 
         DirectoryInfo burstDebugInformation = new DirectoryInfo(Path.Join(exportPath, "..", "unityLibrary_BurstDebugInformation_DoNotShip"));
         if(burstDebugInformation.Exists) {
