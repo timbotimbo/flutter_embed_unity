@@ -8,7 +8,6 @@ plugins {
 android {
     namespace = "com.learntoflutter.flutter_embed_unity_2022_3_android"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
