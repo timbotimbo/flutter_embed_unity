@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_embed_unity_2022_3_android: ^1.1.2-beta.2
-  flutter_embed_unity: ^1.2.6-beta.2
+  flutter_embed_unity_2022_3_android: ^1.1.2
+  flutter_embed_unity: ^1.2.6
   intl: any
 
 
@@ -21,7 +21,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.3
+  flutter_lints: ^5.0.0
 
 
 flutter:
