@@ -55,7 +55,7 @@ internal class ProjectExportChecker
         {
             if (!EditorUserBuildSettings.exportAsGoogleAndroidProject)
             {
-                ProjectExportHelpers.ShowErrorMessage("Can't export until you tick 'Export project': see File -> Build settings");
+                ProjectExportHelpers.ShowErrorMessage("Can't export until you tick 'Export project': see File -> Build Profiles");
                 return ProjectExportCheckerResult.Failure();
             }
 
