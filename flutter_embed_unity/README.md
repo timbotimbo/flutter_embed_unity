@@ -297,15 +297,16 @@ The Unity project is now ready to use, but we still haven't actually linked it t
 ### Android
 
 - Add the Unity project as a dependency to your app by adding the following to `<your flutter project>/android/app/build.gradle`. If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
-```
+```groovy
+// Syntax for app/build.gradle
 dependencies {
     implementation project(':unityLibrary')
 }
 ```
 
-Alternatively if you created your project using Flutter 3.29 or later, or have migrated to Kotin gradle DSL:
+Alternatively if you created your project using Flutter 3.29 or later, or have migrated to Kotin gradle DSL, you will have a file called `build.gradle.kts` which requires different syntax:
 ```kotlin
-// alternative for build.gradle.kts
+// Alternative syntax for app/build.gradle.kts
 dependencies {
     implementation(project(":unityLibrary"))
 }
@@ -317,11 +318,12 @@ dependencies {
 
 
 - Add the exported unity project to the gradle build by including it in `<your flutter project>/android/settings.gradle`:
-```
+```groovy
+// Syntax for android/settings.gradle
 include ':unityLibrary'
 ```
 ```kotlin
-// alternative for settings.gradle.kts
+// Alternative syntax for android/settings.gradle.kts
 include(":unityLibrary")
 ```
 
@@ -330,7 +332,8 @@ include(":unityLibrary")
 
 Add the Unity export directory as a repository so gradle can find required libraries / AARs etc in `<your flutter project>/android/build.gradle`. If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
 
-```
+```groovy
+// Syntax for android/build.gradle
 allprojects {
     repositories {
         google()
@@ -342,10 +345,8 @@ allprojects {
     }
 }
 ```
-
-Alternatively if you created your project using Flutter 3.29 or later, or have migrated to Kotin gradle DSL:
 ```kotlin
-// alternative for build.gradle.kts
+// Alternative syntax for build.gradle.kts
 allprojects {
     repositories {
         google()
