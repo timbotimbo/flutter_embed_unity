@@ -4,6 +4,8 @@
 
 * Beta release of support for Unity 6000.0 LTS
 
+Thanks to [@timbotimbo](https://github.com/timbotimbo) for creating the Android platform implementation for Unity 6
+
 #### Steps to migrate from Unity 2022.3 to Unity 6000.0:
 * If you are using Android, add the following additional dependency to your pubspec.yaml:
 

@@ -2,3 +2,5 @@
 
 * Initial beta release
   Based on `flutter_embed_unity_2022_3_android`.
+
+Thanks to [@timbotimbo](https://github.com/timbotimbo) for creating the Android platform implementation for Unity 6
