@@ -107,7 +107,27 @@ internal class ProjectExporterAndroid : ProjectExporter
         }
         string buildGradleContents = File.ReadAllText(buildGradleFile.FullName);
 
-#if UNITY_6000_0_OR_NEWER      
+        // UPDATE for Unity 6: we used to add missing namespaces to the unityLibrary\build.gradle and unityLibrary\xrmanifest.androidlib\build.gradle
+        // for compatibility with Gradle 8. Unity 6 now adds these itself.
+
+        // Using project templates created with Flutter 3.29 (Gradle 8 and later) can now cause a build error due to the ndkPath
+        // property in the exported unity project's build.gradle, such as this:
+        //
+        // error: android.ndkVersion is [27.0.12077973] but android.ndkPath /Applications/Unity/Hub/Editor/2022.3.62f1/PlaybackEngines/AndroidPlayer/NDK 
+        // refers to a different version [23.1.7779620]
+        //
+        // To simplify NDK versioning, the README now states that the user should specify an NDK version in their main app's build.gradle which is equal
+        // to or greater than the one used by Unity. We can then simply remove the hardcoded path to Unity's NDK and allow the user's NDK to take precedence:
+        Regex regexNDKPath = new Regex(@"^.*ndkPath.*$", RegexOptions.Multiline);
+        if (regexNDKPath.IsMatch(buildGradleContents))
+        {
+            buildGradleContents = regexNDKPath.Replace(buildGradleContents, "\t// ndkPath was removed by flutter_embed_unity exporter");
+            File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
+            Debug.Log($"ndkPath property was removed from {buildGradleFile.FullName}");
+        }
+        
+
+#if UNITY_6000_0_OR_NEWER
         // Fix reference to gradle file in the 'shared' directory.
         buildGradleContents = Regex.Replace(buildGradleContents, @"\.\./shared/", "./shared/");
         File.WriteAllText(buildGradleFile.FullName, buildGradleContents);
