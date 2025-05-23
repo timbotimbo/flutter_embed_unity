@@ -296,9 +296,28 @@ The Unity project is now ready to use, but we still haven't actually linked it t
 
 ### Android
 
-- Add the Unity project as a dependency to your app by adding the following to `<your flutter project>/android/app/build.gradle`. If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
+- Add the Unity project as a dependency to your app by adding the following to `<your flutter project>/android/app/build.gradle`.
+- Also, if you are using Gradle 8 and later, you need to replace the value of ndkVersion (which is likely set to `flutter.ndkVersion`) with a version of NDK which is equal to or higher than the one used by Unity (see the [Unity NDK compatibililty matrix](https://docs.unity3d.com/6000.1/Documentation/Manual/android-supported-dependency-versions.html)).
+- You should also make sure that your minimum Android SDK is set to one which is equal to or higher than the minimum required by your Unity project. The minimum supported by Unity 2022.3 is 22, the minimum supported by Unity 6000.0 is 23 (or, it may be set to a higher value in your Unity project's [Player Settings](https://docs.unity3d.com/6000.1/Documentation/Manual/class-PlayerSettingsAndroid.html))
+
+If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
 ```groovy
 // Syntax for app/build.gradle
+android {
+  ...
+  // Change ndkVersion to minimum supported by Unity:
+  ndkVersion "23.1.7779620"  // For Unity 2022.3
+  ndkVersion "27.2.12479018"  // For Unity 6000.0
+
+  ...
+  defaultConfig {
+    ...    
+    // Make sure minSdkVersion is equal to or higher than the minimum supported by your Unity project
+    minSdkVersion 23  // 22+ for Unity 2022.3, 23+ for Unity 6000.0
+  }
+}
+
+// Add this:
 dependencies {
     implementation project(':unityLibrary')
 }
@@ -307,6 +326,21 @@ dependencies {
 Alternatively if you created your project using Flutter 3.29 or later, or have migrated to Kotin gradle DSL, you will have a file called `build.gradle.kts` which requires different syntax:
 ```kotlin
 // Alternative syntax for app/build.gradle.kts
+android {
+  ...
+  // Change ndkVersion to minimum supported by Unity:
+  ndkVersion = "23.1.7779620"  // For Unity 2022.3
+  ndkVersion = "27.2.12479018"  // For Unity 6000.0
+
+  ...
+  defaultConfig {
+    ...    
+    // Make sure minSdk is equal to or higher than the minimum supported by your Unity project
+    minSdk = 23  // 22+ for Unity 2022.3, 23+ for Unity 6000.0
+  }
+}
+
+// Add this:
 dependencies {
     implementation(project(":unityLibrary"))
 }
