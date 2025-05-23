@@ -401,6 +401,8 @@ allprojects {
 
 ![7](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/56097d90-4707-4375-ba33-4e5d65cae104)
 
+By default, Unity references `unityStreamingAssets` in it's exported project build.gradle, and provides the definition in the gradle.properties of the thin launcher app. Because we are using a Flutter app rather than the provided launcher, we need to add the same definition to our own gradle.properites, otherwise you will get a build error `Could not get unknown property 'unityStreamingAssets'`
+
 - Add to android/gradle.properties:
 
 ```
@@ -409,18 +411,25 @@ unityStreamingAssets=
 
 ![8](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/b705d075-175c-4bd6-a126-422d83670d30)
 
-> By default, Unity references `unityStreamingAssets` in it's exported project build.gradle, and provides the definition in the gradle.properties of the thin launcher app. Because we are using a Flutter app rather than the provided launcher, we need to add the same definition to our own gradle.properites, otherwise you will get a build error `Could not get unknown property 'unityStreamingAssets'`
 
-- (Optional) Unity's resources files are already compressed during the unity project export. To prevent them from being unnecessarily compressed again when your app is built (which results in increased load time of Unity at runtime), copy the `aaptOptions` block from the unity library's build.gradle `android/unityLibrary/build.gradle` to your app's build.gradle `android/app/build.gradle` (thanks [@RF103T](https://github.com/RF103T)). It goes inside the `android` block, so should look like this:
+Unity's resources files are already compressed during the unity project export. When the Flutter project is built, these resources may be compressed again unnecessarily. To prevent this and increase the load time of Unity at runtime you can to copy some blocks from Unity's build.gradle to your app's build.gradle.
 
-```
+- (Optional) Copy the `aaptOptions` block (if using Unity 2022.3) or the `androidResources` block from the unity library's build.gradle `android/unityLibrary/build.gradle` to your app's build.gradle `android/app/build.gradle` (thanks [@RF103T](https://github.com/RF103T)). It goes inside the `android` block, so should look like this:
+
+```kotlin
 android {
 
   ...
   
+  // For Unity 2022.3 add this:
   aaptOptions {
     noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
     ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+  }
+  // For Unity 6000.0 add this:
+  androidResources {
+    ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+    noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
   }
 }
 ```
@@ -428,7 +437,7 @@ android {
 ![Screenshot 2025-03-28 at 16 38 03](https://github.com/user-attachments/assets/f81693ae-3e19-4ecd-a794-6fbdd343bea4)
 
 
-> This can significantly increase the load speed of your Unity project. For more detail see [issue #32](https://github.com/learntoflutter/flutter_embed_unity/issues/32#issuecomment-2757284181)
+This can significantly increase the load speed of your Unity project if you have large assets. For more detail see [issue #32](https://github.com/learntoflutter/flutter_embed_unity/issues/32#issuecomment-2757284181)
 
 ## If you're using XR (VR / AR) on Android
 
