@@ -14,14 +14,17 @@ body:
       description: Please search to see if an issue already exists for the bug you encountered.
       options:
         - label: I have searched the existing issues
-  - type: checkboxes
+  - type: dropdown
     id: unityversion
     attributes:
       label: Unity version
-      description: As per the [README](https://github.com/jamesncl/flutter_embed_unity/blob/main/flutter_embed_unity/README.md) this plugin ONLY supports Unity 2022.3 LTS. Using a different version will likely lead to crashes, so this issue may be closed as wontfix
+      description: As per the [README](https://github.com/jamesncl/flutter_embed_unity/blob/main/flutter_embed_unity/README.md) this plugin ONLY supports Unity 2022.3 LTS and Unity 6000.0 LTS. Using different versions is out of the scope of this package and will not be considered for issues.
       options:
-        - label: I am using Unity 2022.3 LTS
-          required: false
+        - Unity 2022.3 LTS
+        - Unity 6000.0 LTS
+      default: 0
+    validations:
+      required: false
   - type: checkboxes
     id: commonissues
     attributes:
