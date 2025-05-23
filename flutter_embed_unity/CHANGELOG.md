@@ -16,6 +16,13 @@ dependencies:
   flutter_embed_unity_6000_0_android: ^1.2.1-beta.1  # (Use the latest available)
 ```
 * If you are using Android, upgrade your android project's Gradle and AGP to match or exceed [those used by Unity 6000.0](https://docs.unity3d.com/6000.0/Documentation/Manual/android-gradle-overview.html) and update your NDK version to 27.2.12479018 or higher
+* If you are using Android and you previously copied the `aaptOptions` block from your Unity export's build.gradle file to your app's build.gradle file to prevent increased load time due to double compression, this has been migrated to an `androidResources` block. Remove the `aaptOptions` block from your android/app/build.gradle and replace with:
+```kotlin
+  androidResources {
+    ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+    noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
+  }
+```
 * [Migrate your Unity project to Unity 6000.0](https://docs.unity3d.com/6000.0/Documentation/Manual/upgrade-project.html)
 * Update your Unity project's Flutter export scripts by importing the new `flutter_embed_unity_6000_0.unitypackage` asset from [releases on Github](https://github.com/learntoflutter/flutter_embed_unity/releases)
 * Export your Unity project to your Flutter project as before, using the new Unity 6 export scripts
