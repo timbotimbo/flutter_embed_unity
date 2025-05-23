@@ -7,7 +7,31 @@ Embed your [Unity 3D](https://unity.com/) game / app into Flutter apps as a widg
 
 # Usage
 
-After setting up your Unity and Flutter project (see below), use `EmbedUnity` to show your Unity game and listen to messages sent from your Unity scripts. Use the top level dart function `sendToUnity` to send messages from Flutter to any game object in Unity which has a `MonoBehaviour` script attached containing a public function accepting one `string` parameter.
+
+## For Unity 6000.0 add a dependency for the new Android plugin implementation
+
+Currently, the default configuration of the plugin supports Unity 2022.3.
+
+If you are using Unity 2022.3 you only need to include the latest **flutter_embed_unity** package in your pubspec.yaml.
+
+If you are using Unity 6000.0 on Android, you must opt-in to use the new implementation for the Android platform by also including the latest **flutter_embed_unity_6000_0_android** package. For example:
+
+```yaml
+dependencies:
+  ...
+  flutter_embed_unity: ^1.2.7  # (Use the latest available)
+  # Add this for Unity 6000.0 support on Android:
+  flutter_embed_unity_6000_0_android: ^1.2.1-beta.1  # (Use the latest available)
+```
+
+For iOS only, you do not need to add any additional dependency - the default implementation for iOS is compatible with both versions of Unity.
+
+> In future versions, Unity 6000.0 support will become the default, and you will have to opt-out by including flutter_embed_unity_2022_3_android in your pubspec.yaml
+
+
+## Using the EmbedUnity widget
+
+After setting up your Unity and Flutter project (see below), use the `EmbedUnity` widget to show your Unity game and listen to messages sent from your Unity scripts. Use the top level dart function `sendToUnity` to send messages from Flutter to any game object in Unity which has a `MonoBehaviour` script attached containing a public function accepting one `string` parameter.
 
 ```dart
 import 'package:flutter/material.dart';
@@ -438,6 +462,7 @@ android {
 
 
 This can significantly increase the load speed of your Unity project if you have large assets. For more detail see [issue #32](https://github.com/learntoflutter/flutter_embed_unity/issues/32#issuecomment-2757284181)
+
 
 ## If you're using XR (VR / AR) on Android
 
