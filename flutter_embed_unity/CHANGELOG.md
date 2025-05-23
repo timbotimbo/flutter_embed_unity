@@ -1,3 +1,25 @@
+## 1.3.0-beta.1
+
+23 May 2025
+
+* Beta release of support for Unity 6000.0 LTS
+
+#### Steps to migrate from Unity 2022.3 to Unity 6000.0:
+* If you are using Android, add the following additional dependency to your pubspec.yaml:
+
+```yaml
+dependencies:
+  ...
+  # Add this for Unity 6000.0 support on Android:
+  flutter_embed_unity_6000_0_android: ^1.2.1-beta.1  # (Use the latest available)
+```
+* If you are using Android, upgrade your android project's Gradle and AGP to match or exceed [those used by Unity 6000.0](https://docs.unity3d.com/6000.0/Documentation/Manual/android-gradle-overview.html) and update your NDK version to 27.2.12479018 or higher
+* [Migrate your Unity project to Unity 6000.0](https://docs.unity3d.com/6000.0/Documentation/Manual/upgrade-project.html)
+* Update your Unity project's Flutter export scripts by importing the new `flutter_embed_unity_6000_0.unitypackage` asset from [releases on Github](https://github.com/learntoflutter/flutter_embed_unity/releases)
+* Export your Unity project to your Flutter project as before, using the new Unity 6 export scripts
+* If you encounter any build errors, go through the project setup steps in the README again (this has been updated for Unity 6)
+
+
 ## 1.2.7
 
 22 May 2025
