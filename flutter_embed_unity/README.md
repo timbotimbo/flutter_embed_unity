@@ -436,25 +436,36 @@ unityStreamingAssets=
 ![8](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/b705d075-175c-4bd6-a126-422d83670d30)
 
 
-Unity's resources files are already compressed during the unity project export. When the Flutter project is built, these resources may be compressed again unnecessarily. To prevent this and increase the load time of Unity at runtime you can to copy some blocks from Unity's build.gradle to your app's build.gradle.
+Unity's resources files are already compressed during the unity project export. When the Flutter project is built, these resources may be compressed again unnecessarily, which leads to longer loading times for Unity. To prevent this you can to copy some blocks from Unity's build.gradle to your app's build.gradle:
 
-- (Optional) Copy the `aaptOptions` block (if using Unity 2022.3) or the `androidResources` block from the unity library's build.gradle `android/unityLibrary/build.gradle` to your app's build.gradle `android/app/build.gradle` (thanks [@RF103T](https://github.com/RF103T)). It goes inside the `android` block, so should look like this:
+- (Optional) Add an `androidResources` block (or `aaptOptions` if you are using AGP version less than 4.0, which is not recommended) to your app's `android/app/build.gradle` (thanks [@RF103T](https://github.com/RF103T)). It goes inside the `android` block.
 
-```kotlin
+```groovy
 android {
-
   ...
-  
-  // For Unity 2022.3 add this:
-  aaptOptions {
-    noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
-    ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
-  }
-  // For Unity 6000.0 add this:
+  // Syntax for android/app/build.gradle
   androidResources {
     ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
     noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
   }
+}
+```
+```groovy
+android {
+  ...
+  // Syntax for android/app/build.gradle.kts
+
+  // Read unityStreamingAssets from gradle.properties
+  val unityStreamingAssetsList = (project.findProperty("unityStreamingAssets") as? String)
+              ?.split(",")
+              ?.map { it.trim() }
+              ?: emptyList()
+
+  noCompress += listOf(
+    ".unity3d", ".ress", ".resource", ".obb", ".bundle", ".unityexp"
+  ) + unityStreamingAssetsList
+
+  ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
 }
 ```
 
