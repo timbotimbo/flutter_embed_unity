@@ -212,7 +212,7 @@ To allow Unity to send messages to Flutter, and to make exporting your Unity pro
 - Go to [the releases for this plugin on Github](https://github.com/learntoflutter/flutter_embed_unity/releases) and find the version of this plugin you are using (the version you [add to your `pubspec.yaml`](https://pub.dev/packages/flutter_embed_unity/install))
 - Expand `Assets` and download the file `flutter_embed_unity_2022_3.unitypackage` for Unity 2022.3 or `flutter_embed_unity_6000_0.unitypackage` for Unity 6000.0.
 
-![1](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/92a25bd6-29a7-4caf-bf6d-399d2ecd8f06)
+![Screenshot 2025-05-29 at 12 11 39](https://github.com/user-attachments/assets/063d2825-0d18-4fe3-a0bf-2d198c18187f)
 
 
 - In Unity, go to `Assets -> import package -> Custom package`, and choose the file you just downloaded
@@ -326,13 +326,14 @@ platform :ios, '13.0'
 
 ### Android
 
-- Add the Unity project as a dependency to your app by adding the following to `<your flutter project>/android/app/build.gradle`.
-- Also, if you are using Gradle 8 and later, you need to replace the value of the NDK version (which is likely set to `flutter.ndkVersion`) with a version of NDK which is equal to or higher than the one used by Unity (see the [Unity NDK compatibililty matrix](https://docs.unity3d.com/6000.1/Documentation/Manual/android-supported-dependency-versions.html)).
-- You should also make sure that your minimum Android SDK is set to one which is equal to or higher than the minimum required by your Unity project. The minimum supported by Unity 2022.3 is 22, the minimum supported by Unity 6000.0 is 23 (or, it may be set to a higher value in your Unity project's [Player Settings](https://docs.unity3d.com/6000.1/Documentation/Manual/class-PlayerSettingsAndroid.html))
+- You need to make the following modifications to `<your flutter project>/android/app/build.gradle`: 
+  - Add the Unity project as a dependency to your app by adding `implementation project(':unityLibrary')` as a dependency (see below).
+  - Also, if you are using Gradle 8 and later, you need to replace the value of the NDK version (which is likely set to `flutter.ndkVersion`) with a version of NDK which is equal to or higher than the one used by Unity (see the [Unity NDK compatibililty matrix](https://docs.unity3d.com/6000.1/Documentation/Manual/android-supported-dependency-versions.html)).
+  - You should also make sure that your minimum Android SDK is set to one which is equal to or higher than the minimum required by your Unity project. The minimum supported by Unity 2022.3 is 22, the minimum supported by Unity 6000.0 is 23 (or, it may be set to a higher value in your Unity project's [Player Settings](https://docs.unity3d.com/6000.1/Documentation/Manual/class-PlayerSettingsAndroid.html))
 
 If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
 ```groovy
-// Syntax for app/build.gradle
+// Syntax for android/app/build.gradle
 android {
   ...
   // Change ndkVersion to minimum supported by Unity:
@@ -355,7 +356,7 @@ dependencies {
 
 Alternatively if you created your project using Flutter 3.29 or later, or have migrated to Kotin gradle DSL, you will have a file called `build.gradle.kts` which requires different syntax:
 ```kotlin
-// Alternative syntax for app/build.gradle.kts
+// Alternative syntax for android/app/build.gradle.kts
 android {
   ...
   // Change ndkVersion to minimum supported by Unity:
@@ -376,11 +377,6 @@ dependencies {
 }
 ```
 
-
-![5](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/04e44ff4-755c-457b-9267-d9c4735559fc)
-
-
-
 - Add the exported unity project to the gradle build by including it in `<your flutter project>/android/settings.gradle`:
 ```groovy
 // Syntax for android/settings.gradle
@@ -390,9 +386,6 @@ include ':unityLibrary'
 // Alternative syntax for android/settings.gradle.kts
 include(":unityLibrary")
 ```
-
-![6](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/11721c31-2d76-4451-81bf-c0a9fa4bd62e)
-
 
 Add the Unity export directory as a repository so gradle can find required libraries / AARs etc in `<your flutter project>/android/build.gradle`. If you created your project using Flutter 3.27 or earlier, you are likely still using the Groovy syntax:
 
@@ -423,8 +416,6 @@ allprojects {
 }
 ```
 
-![7](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/56097d90-4707-4375-ba33-4e5d65cae104)
-
 By default, Unity references `unityStreamingAssets` in it's exported project build.gradle, and provides the definition in the gradle.properties of the thin launcher app. Because we are using a Flutter app rather than the provided launcher, we need to add the same definition to our own gradle.properites, otherwise you will get a build error `Could not get unknown property 'unityStreamingAssets'`
 
 - Add to android/gradle.properties:
@@ -432,9 +423,6 @@ By default, Unity references `unityStreamingAssets` in it's exported project bui
 ```
 unityStreamingAssets=
 ```
-
-![8](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/b705d075-175c-4bd6-a126-422d83670d30)
-
 
 Unity's resources files are already compressed during the unity project export. When the Flutter project is built, these resources may be compressed again unnecessarily, which leads to longer loading times for Unity. To prevent this you can to copy some blocks from Unity's build.gradle to your app's build.gradle:
 
@@ -469,9 +457,6 @@ android {
 }
 ```
 
-![Screenshot 2025-03-28 at 16 38 03](https://github.com/user-attachments/assets/f81693ae-3e19-4ecd-a794-6fbdd343bea4)
-
-
 This can significantly increase the load speed of your Unity project if you have large assets. For more detail see [issue #32](https://github.com/learntoflutter/flutter_embed_unity/issues/32#issuecomment-2757284181)
 
 
@@ -481,10 +466,6 @@ If you are using XR features in Unity (eg ARFoundation) you need to perform some
 
 - Add `include ':unityLibrary:xrmanifest.androidlib'` to your `android/settings.gradle` or  
 `include(":unityLibrary:xrmanifest.androidlib")` for `android/settings.gradle.kts`:
-
-
-![6b](https://github.com/jamesncl/flutter_embed_unity/assets/15979056/3a51afd3-0d3c-4fe9-8bc1-be67daff6e74)
-
 
 In your exported `unityLibrary` you may find an extra project folder called `xrmanifest.androidlib`. The Unity project depends on this, so you need to inlcude it in your app's build.
 
