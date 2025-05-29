@@ -56,6 +56,20 @@ internal class ProjectExporterAndroid : ProjectExporter
             Debug.Log($"Moved {stringsResourceFileFromPath} to {stringResourcesFileToPath}");
         }
 
+        // Inspect gradle.properties and report the value of unityStreamingAssets, which should be added
+        // to the user's android/gradle.properties
+        FileInfo gradlePropertiesFile = new FileInfo(Path.Combine(exportPath, "gradle.properties"));
+        if (gradlePropertiesFile.Exists)
+        {
+            string gradlePropertiesContent = File.ReadAllText(gradlePropertiesFile.FullName);
+            Match unityStreamingAssetsMatch = (new Regex(@"(?<=unityStreamingAssets=).*", RegexOptions.Multiline)).Match(gradlePropertiesContent);
+            if (unityStreamingAssetsMatch.Success)
+            {
+                Debug.Log($"The following should be added to your project's android/gradle.properties:\n" +
+                    $"unityStreamingAssets={unityStreamingAssetsMatch.Value}");
+            }
+        }
+        
         // The launcher folder can now be deleted
         DirectoryInfo launcherDirectory = new DirectoryInfo(Path.Combine(exportPath, "launcher"));
         Directory.Delete(launcherDirectory.FullName, true);
