@@ -416,13 +416,16 @@ allprojects {
 }
 ```
 
-By default, Unity references `unityStreamingAssets` in it's exported project build.gradle, and provides the definition in the gradle.properties of the thin launcher app. Because we are using a Flutter app rather than the provided launcher, we need to add the same definition to our own gradle.properites, otherwise you will get a build error `Could not get unknown property 'unityStreamingAssets'`
+By default, Unity references `unityStreamingAssets` in it's exported project build.gradle, and provides the definition in the gradle.properties of the thin launcher app. Because we are using a Flutter app rather than the provided launcher, we need to add the same definition to our own gradle.properites, otherwise you will get a build error `Could not get unknown property 'unityStreamingAssets'`.
+
+To find the value of unityStreamingAssets you need to add, inspect the Unity console logs after exporting your Unity project. You should see a log which says "The following should be added to your project's android/gradle.properties:". Use the value printed below this line. It is often a blank value (i.e. just use `unityStreamingAssets=`), but if you are using [Streaming Assets](https://docs.unity3d.com/6000.0/Documentation/Manual/StreamingAssets.html) you may have a different value.
 
 - Add to android/gradle.properties:
 
 ```
-unityStreamingAssets=
+unityStreamingAssets=<the value shown in the Unity console log after export>
 ```
+
 
 Unity's resources files are already compressed during the unity project export. When the Flutter project is built, these resources may be compressed again unnecessarily, which leads to longer loading times for Unity. To prevent this you can to copy some blocks from Unity's build.gradle to your app's build.gradle:
 
