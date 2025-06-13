@@ -446,17 +446,19 @@ android {
   ...
   // Syntax for android/app/build.gradle.kts
 
-  // Read unityStreamingAssets from gradle.properties
-  val unityStreamingAssetsList = (project.findProperty("unityStreamingAssets") as? String)
+  androidResources {
+    // Read unityStreamingAssets from gradle.properties
+    val unityStreamingAssetsList = (project.findProperty("unityStreamingAssets") as? String)
               ?.split(",")
               ?.map { it.trim() }
               ?: emptyList()
 
-  noCompress += listOf(
-    ".unity3d", ".ress", ".resource", ".obb", ".bundle", ".unityexp"
-  ) + unityStreamingAssetsList
+    noCompress += listOf(
+      ".unity3d", ".ress", ".resource", ".obb", ".bundle", ".unityexp"
+    ) + unityStreamingAssetsList
 
-  ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+    ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+  }
 }
 ```
 
