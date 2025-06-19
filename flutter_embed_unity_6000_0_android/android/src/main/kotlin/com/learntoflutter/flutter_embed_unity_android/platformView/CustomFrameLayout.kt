@@ -52,9 +52,9 @@ public class CustomFrameLayout : FrameLayout  {
             //  Unity's new Input System package does not detect these touches, copy the motion event to change the immutable deviceId.
             val modifiedEvent = motionEvent.copy(deviceId = -1)
             motionEvent.recycle()
-            return super.onTouchEvent(modifiedEvent)
+            return super.dispatchTouchEvent(modifiedEvent)
         } else {
-            return super.onTouchEvent(motionEvent)
+            return super.dispatchTouchEvent(motionEvent)
         }
     }
 
