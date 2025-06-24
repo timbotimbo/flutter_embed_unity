@@ -41,7 +41,9 @@ class FlutterEmbedUnityAndroidPlugin : FlutterPlugin, ActivityAware {
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         Log.d(logTag, "onAttachedToEngine")
 
-        // Store the messenger reference, in case this is the main Flutter Engine and needs to setup a methodchannel.
+        // Store the messenger reference, in case this is the main Flutter Engine and needs to setup a MethodChannel.
+        // (do not create the MethodChannel here, it must only be created if an Activity is attached.
+        // See initializeMethodChannel() and comments in onAttachedToActivity())
         messenger = flutterPluginBinding.binaryMessenger
 
         // Register a view factory
@@ -64,21 +66,21 @@ class FlutterEmbedUnityAndroidPlugin : FlutterPlugin, ActivityAware {
         messenger = null
     }
 
+
     private fun initializeMethodChannel() {
-        if (channel != null) return;
+        channel?.let { channel ->
+            messenger?.let { messenger ->
+                this.channel = MethodChannel(messenger, uniqueIdentifier).apply {
+                    setMethodCallHandler(methodCallHandler)
+                }
 
-        val m = messenger
-        if (m != null) {
-            channel = MethodChannel(m, uniqueIdentifier).apply {
-                setMethodCallHandler(methodCallHandler)
+                // Register the method channel with SendToFlutter static class (which is called by Unity)
+                // so messages from Unity to this plugin can be forwarded on to Flutter
+                SendToFlutter.methodChannel = channel
+            } ?: run {
+                // According to the Flutter lifecycle, onAttachedToEngine is called first and this shouldn't happen.
+                Log.e(logTag, "BinaryMessenger is null. MethodChannel not created.")
             }
-
-            // Register the method channel with SendToFlutter static class (which is called by Unity)
-            // so messages from Unity to this plugin can be forwarded on to Flutter
-            SendToFlutter.methodChannel = channel
-        } else {
-            // According to the Flutter lifecycle, onAttachedToEngine is called first and this shouldn't happen.
-            Log.e(logTag, "BinaryMessenger is null. MethodChannel not created.")
         }
     }
 
@@ -96,6 +98,8 @@ class FlutterEmbedUnityAndroidPlugin : FlutterPlugin, ActivityAware {
         Log.d(logTag, "onAttachedToActivity")
 
         // Only setup the MethodChannel for the Flutter Engine that has the Activity attached.
+        // This is important to avoid issues with other plugins creating additional background Flutter engines
+        // See https://github.com/learntoflutter/flutter_embed_unity/issues/35
         initializeMethodChannel()
 
         // UnityPlayerSingleton needs the activity which will be received in onAttachedToActivity
