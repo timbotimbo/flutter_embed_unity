@@ -67,7 +67,7 @@ class FlutterEmbedUnityAndroidPlugin : FlutterPlugin, ActivityAware {
     }
 
     private fun initializeMethodChannel() {
-        channel?.let { channel ->
+        if(channel == null) {
             messenger?.let { messenger ->
                 this.channel = MethodChannel(messenger, uniqueIdentifier).apply {
                     setMethodCallHandler(methodCallHandler)
