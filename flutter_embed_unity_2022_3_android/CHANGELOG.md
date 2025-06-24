@@ -1,3 +1,11 @@
+## 1.1.4
+
+24 June 2025
+
+* Merged [#45](https://github.com/learntoflutter/flutter_embed_unity/pull/45): fixes touch events for Unity 6
+* Merged [#46](https://github.com/learntoflutter/flutter_embed_unity/pull/46): fixes messages from Unity not arriving in Flutter when using other plugins which create background Flutter engines
+
+
 ## 1.1.3
 
 22 May 2025

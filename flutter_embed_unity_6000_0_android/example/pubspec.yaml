@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_embed_unity_6000_0_android: ^1.2.1-beta.1
-  flutter_embed_unity: ^1.2.7
+  flutter_embed_unity_6000_0_android: ^1.2.2
+  flutter_embed_unity: ^1.3.1
   intl: any
 
 

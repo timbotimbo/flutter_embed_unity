@@ -1,3 +1,12 @@
+## 1.2.2
+
+24 June 2025
+
+* Production release of support for Unity 6000.0
+* Merged [#45](https://github.com/learntoflutter/flutter_embed_unity/pull/45): fixes touch events for Unity 6
+* Merged [#46](https://github.com/learntoflutter/flutter_embed_unity/pull/46): fixes messages from Unity not arriving in Flutter when using other plugins which create background Flutter engines
+
+
 ## 1.2.1-beta.1
 
 * Initial beta release
