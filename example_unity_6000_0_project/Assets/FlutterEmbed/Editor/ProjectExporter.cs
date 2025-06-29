@@ -11,6 +11,13 @@ internal abstract class ProjectExporter {
 
         if (report.summary.result != BuildResult.Succeeded) {
             Debug.LogError("Building project for Flutter failed");
+            
+            if (Application.isBatchMode) {
+
+                // throwing an exception shows an error on the command line, exit(1) doesn't.
+                throw new System.Exception("Building project for Flutter failed");
+                // EditorApplication.Exit(1);
+            }
         }
         else {
             TransformExportedProject(buildPlayerOptions.locationPathName);
@@ -20,6 +27,10 @@ internal abstract class ProjectExporter {
                 Debug.LogWarning(log);
             }
             Debug.Log($"Building project for Flutter succeeded");
+
+            if (Application.isBatchMode) {
+                EditorApplication.Exit(0);
+            }
         }
     }
 

@@ -1,14 +1,20 @@
 using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 internal class ProjectExportHelpers
 {
     static internal void ShowErrorMessage(string errorMessage)
     {
-        EditorUtility.DisplayDialog(
-                        "Export incomplete",
-                        errorMessage,
-                        "Okay");
+        if (!Application.isBatchMode) {
+            EditorUtility.DisplayDialog(
+                            "Export incomplete",
+                            errorMessage,
+                            "Okay");
+        } else {
+            // We don't have any UI to help the user, abort the export.
+            throw new System.Exception(errorMessage);
+        }
     }
 
     static internal void MoveContentsOfDirectory(DirectoryInfo from, DirectoryInfo to)
