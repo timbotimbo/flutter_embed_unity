@@ -305,8 +305,12 @@ The `EmbedUnity` assets you have added to your Unity project includes scripts to
 The Unity project is now ready to use, but we still haven't actually linked it to our Flutter app.
 
 
-### Exporting from the command line
-As an alternative, you can also trigger an export from the command line.
+### (optional) Exporting from the command line
+
+> Batchmode support was added after version 1.3.1.  
+If `ProjectExporterBatchmode.ExportProject` doesn't exisit in your Unity project, download and import a newer unitypackage. 
+
+As an alternative, you can also trigger an export using the command line.
 
 It is advised to try an export using the Editor Menu first, as that will help you check your project settings.
 
@@ -324,19 +328,45 @@ Once you've got all 3, you are ready to export.
 
 Use the `-buildTarget` value `Android` or `iOS` to select your platform.
 ```
-<unity path (1)> -projectPath <unity project path (2)> -batchmode -buildTarget Android -executeMethod ProjectExporterBatchmode.ExportProject -exportPath <output path (3)> -quit
+"<unity path>" -projectPath "<unity project path>" -batchmode -buildTarget Android -executeMethod ProjectExporterBatchmode.ExportProject -exportPath "<output path>" -quit
 ```
 Replace `< >` with the required directories. You should put the path in quotation marks `""` if it includes spaces.
 
- **Note**:  
-> Unity will launch as an invisible (headless) instance in the background. Your command might appear to finish instantly, but Unity will still be active for a while to complete the export.
->
->It is important to include `-quit`, otherwise the headless Unity engine might stay active on your machine after the script aborts.
+Unity will launch as an invisible (headless) instance in the background. It is important to include `-quit`, otherwise the headless Unity engine might stay active on your machine after the script aborts.
 
 Unity won't display logs and errors in the command line.
 You can find output in the [editor log](https://docs.unity3d.com/2022.3/Documentation/Manual/LogFiles.html) or add the argument `-logFile <path to file>` to log to a specific file.
 
 Check the [Unity documentation](https://docs.unity3d.com/2022.3/Documentation/Manual/EditorCommandLineArguments.html) for more info on building from the command line.
+
+#### Windows specific commands
+On windows the command will return instantly, before Unity is done with the export.  
+You can use start commands to wait for Unity to complete. 
+
+CMD
+```cmd
+start /wait "" "<unity path>" ^
+ -projectPath "<unity project path>" ^
+ -batchmode ^
+ -buildTarget Android ^
+ -executeMethod ProjectExporterBatchmode.ExportProject ^
+ -exportPath "<output path>" ^
+ -quit
+```
+Powershell
+```powershell
+Start-Process -FilePath "<unity path>" `
+  -ArgumentList `
+    "-projectPath", "<unity project path>", `
+    "-batchmode", `
+    "-buildTarget", "Android", `
+    "-executeMethod", "ProjectExporterBatchmode.ExportProject", `
+    "-exportPath", "<output path>", `
+    "-quit" `
+  -Wait -PassThru
+```
+
+
 
 ## Link exported Unity project to your Flutter project
 
