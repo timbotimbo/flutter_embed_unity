@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
+using UnityEngine;
 
 internal class ProjectExportCheckerResult
 {
@@ -135,6 +137,12 @@ internal class ProjectExportChecker
 
     private ProjectExportCheckerResult PrepareExportDirectory(String subfolderName, String folderName, List<string> precheckWarnings)
     {
+        if (Application.isBatchMode)
+        {
+            // from the command line, run a version that doesn't use Dialogs.
+            return PrepareExportDirectoryBatchmode(subfolderName, folderName, precheckWarnings);
+        }
+
         bool confirmOpenFolderSelection = EditorUtility.DisplayDialog(
                     "Select export directory",
                     "In the next window, select the export directory. This should be " +
@@ -200,4 +208,78 @@ internal class ProjectExportChecker
             }
         }
     }
+
+    private ProjectExportCheckerResult PrepareExportDirectoryBatchmode(String subfolderName, String folderName, List<string> precheckWarnings)
+    {
+        if(!Application.isBatchMode)
+        {
+            return PrepareExportDirectory(subfolderName, folderName, precheckWarnings);
+        }
+
+        string path = ProjectExporterBatchmode.GetExportPath();
+        if(path == null)
+        {
+            ProjectExportHelpers.ShowErrorMessage("No -exportPath command line argument found");
+            return ProjectExportCheckerResult.Failure();
+        }
+
+        DirectoryInfo selectedDirectory = new DirectoryInfo(path);
+
+        // We can't get the current BuildPlayerOptions from the active Unity Editor.
+        // Create a new instance and set all relevant settings.
+
+        // Include some build options.
+        BuildOptions buildOptions = BuildOptions.None;
+        if (EditorUserBuildSettings.development)
+        {
+            buildOptions |= BuildOptions.Development;
+        }
+
+        if (EditorUserBuildSettings.connectProfiler)
+        {
+            buildOptions |= BuildOptions.ConnectWithProfiler;
+        }
+        if (EditorUserBuildSettings.allowDebugging)
+        {
+            buildOptions |= BuildOptions.AllowDebugging;
+        }
+
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
+        {
+            scenes = EditorBuildSettings.scenes
+                        .Where(s => s.enabled)
+                        .Select(s => s.path)
+                        .ToArray(),
+            target = EditorUserBuildSettings.activeBuildTarget,
+            locationPathName = selectedDirectory.FullName,
+            options = buildOptions
+        };
+
+        // The same directory checks as in PrepareExportDirectory, but don't ask permission to create and delete directories
+
+        if (selectedDirectory.Name.Equals(subfolderName)) 
+        {
+            buildPlayerOptions.locationPathName = Path.Combine(buildPlayerOptions.locationPathName, folderName);
+            selectedDirectory = new DirectoryInfo(buildPlayerOptions.locationPathName);
+            Directory.CreateDirectory(buildPlayerOptions.locationPathName);
+        }
+
+        if (!selectedDirectory.Name.Equals(folderName) || selectedDirectory.Parent == null || selectedDirectory.Parent.Name != subfolderName)
+        {
+            ProjectExportHelpers.ShowErrorMessage($"Expected a folder named {folderName} inside '{subfolderName}' folder. " +
+                $"Check the plugin documentation: you need to select '<your flutter project>/{subfolderName}/{folderName}'. " +
+                "Aborting export");
+            return ProjectExportCheckerResult.Failure();
+        }
+        else
+        {
+            if (Directory.Exists(buildPlayerOptions.locationPathName) && Directory.GetFileSystemEntries(buildPlayerOptions.locationPathName).Length != 0)
+            {
+                Debug.Log($"Deleting existing contents of {selectedDirectory.FullName}");
+                Directory.Delete(selectedDirectory.FullName, true);
+            }
+            return ProjectExportCheckerResult.Success(buildPlayerOptions, precheckWarnings);
+        }
+    }
+
 }

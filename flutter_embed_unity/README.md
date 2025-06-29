@@ -305,6 +305,32 @@ The `EmbedUnity` assets you have added to your Unity project includes scripts to
 The Unity project is now ready to use, but we still haven't actually linked it to our Flutter app.
 
 
+### Exporting from the command line
+As an alternative, you can also trigger an export from the command line.
+
+It is advised to try an export using the Editor Menu first, as that will help you check your project settings.
+
+For you command you will need the path to 3 directories.
+1. Your Unity install directory:  
+  Mac `/Applications/Unity/Hub/Editor/<version>/Unity.app/Contents/MacOS/Unity`  
+  Windows`C:/Program Files/Unity/Hub/Editor/<version>/Editor/Unity.exe`  
+  Linux `/Applications/Unity/Hub/Editor/<version>/Unity.app/Contents/Linux/Unity`  
+2. Your Unity project directory.
+3. Your output directory.  
+  `<your flutter project>/android/unityLibrary` or `<your flutter project>/ios/unityLibrary`
+
+
+Once you've got all 3, you are ready to export.
+
+Use the -buildTarget parameter `Android` or `iOS` and replace `< >` with the directories above.
+```
+<unity path (1)> -projectPath <unity project path (2)> -batchmode -buildTarget Android -executeMethod ProjectExporterBatchmode.ExportProject -exportPath <output path (3)> -quit
+```
+
+It is important to include `-quit`, otherwise a headless Unity engine might stay active on your machine.
+
+Check the [Unity documentation](https://docs.unity3d.com/2022.3/Documentation/Manual/EditorCommandLineArguments.html) for more info on building from the command line.
+
 ## Link exported Unity project to your Flutter project
 
 
