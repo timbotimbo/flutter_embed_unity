@@ -322,12 +322,19 @@ For you command you will need the path to 3 directories.
 
 Once you've got all 3, you are ready to export.
 
-Use the -buildTarget parameter `Android` or `iOS` and replace `< >` with the directories above.
+Use the `-buildTarget` value `Android` or `iOS` to select your platform.
 ```
 <unity path (1)> -projectPath <unity project path (2)> -batchmode -buildTarget Android -executeMethod ProjectExporterBatchmode.ExportProject -exportPath <output path (3)> -quit
 ```
+Replace `< >` with the required directories. You should put the path in quotation marks `""` if it includes spaces.
 
-It is important to include `-quit`, otherwise a headless Unity engine might stay active on your machine.
+ **Note**:  
+> Unity will launch as an invisible (headless) instance in the background. Your command might appear to finish instantly, but Unity will still be active for a while to complete the export.
+>
+>It is important to include `-quit`, otherwise the headless Unity engine might stay active on your machine after the script aborts.
+
+Unity won't display logs and errors in the command line.
+You can find output in the [editor log](https://docs.unity3d.com/2022.3/Documentation/Manual/LogFiles.html) or add the argument `-logFile <path to file>` to log to a specific file.
 
 Check the [Unity documentation](https://docs.unity3d.com/2022.3/Documentation/Manual/EditorCommandLineArguments.html) for more info on building from the command line.
 
