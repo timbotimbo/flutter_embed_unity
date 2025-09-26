@@ -82,9 +82,15 @@ internal class ProjectExporterAndroid : ProjectExporter
 
         // The files at the root of exportPath can be deleted
         DirectoryInfo exportDirectory = new DirectoryInfo(exportPath);
-        foreach (FileInfo file in exportDirectory.GetFiles()) { 
-            file.Delete(); 
-            Debug.Log($"Deleted {file.FullName}");
+        foreach (FileInfo file in exportDirectory.GetFiles()) {
+            // In later versions of Unity (6000.2) we need to keep the gradle.properties file,
+            // which has some new properites unity.androidSdkPath and unity.androidNdkPath 
+            // which are used by the Unity build.gradle file. For future proofing, let's keep 
+            // this file. See https://github.com/learntoflutter/flutter_embed_unity/issues/56
+            if (file.Name != "gradle.properties") {
+                file.Delete();
+                Debug.Log($"Deleted {file.FullName}");
+            }
         }
 
         // Now move the contents of 
