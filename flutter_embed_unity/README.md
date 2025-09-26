@@ -19,9 +19,9 @@ If you are using Unity 6000.0 on Android, you must opt-in to use the new impleme
 ```yaml
 dependencies:
   ...
-  flutter_embed_unity: ^1.2.7  # (Use the latest available)
+  flutter_embed_unity: ^1.3.1  # (replace this version with the latest available)
   # Add this for Unity 6000.0 support on Android:
-  flutter_embed_unity_6000_0_android: ^1.2.1-beta.1  # (Use the latest available)
+  flutter_embed_unity_6000_0_android: ^1.2.2  # (replace this version with the latest available)
 ```
 
 For iOS only, you do not need to add any additional dependency - the default implementation for iOS is compatible with both versions of Unity.
