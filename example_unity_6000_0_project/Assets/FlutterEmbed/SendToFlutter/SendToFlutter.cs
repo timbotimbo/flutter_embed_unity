@@ -6,21 +6,18 @@ using UnityEngine.SceneManagement;
 public class SendToFlutter
 {
     public static void Send(string data) {
-        if (Application.platform == RuntimePlatform.Android)
+#if UNITY_EDITOR
+        Debug.Log("SendToFlutter - " + data);
+#elif UNITY_ANDROID
+        // Use reflection to call the relevant static Kotlin method in the Android plugin
+        using (AndroidJavaClass sendToFlutterClass = new AndroidJavaClass("com.learntoflutter.flutter_embed_unity_android.messaging.SendToFlutter"))
         {
-            // Use reflection to call the relevant static Kotlin method in the Android plugin
-            using (AndroidJavaClass sendToFlutterClass = new AndroidJavaClass("com.learntoflutter.flutter_embed_unity_android.messaging.SendToFlutter"))
-            {
-                sendToFlutterClass.CallStatic("sendToFlutter", data);
-            }
+            sendToFlutterClass.CallStatic("sendToFlutter", data);
         }
-        else
-        {
-#if UNITY_IOS
-            // Call an obj-C function name
-            FlutterEmbedUnityIos_sendToFlutter(data);
+#elif UNITY_IOS
+        // Call an obj-C function name
+        FlutterEmbedUnityIos_sendToFlutter(data);
 #endif
-        }
     }
 
 #if UNITY_IOS
