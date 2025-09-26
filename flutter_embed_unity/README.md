@@ -104,20 +104,18 @@ There is [an example Unity 2022.3 project](https://github.com/learntoflutter/flu
 
 ### Unity 6000.0 LTS
 
-At the time of writing, any version of Unity 6000.0 is working without reported issues
-
-* For Android, as of November 1st 2025, 6000.0.38 is required due to Google Play
+* For Android, as of November 1st 2025, 6000.0.38 or later is required due to Google Play
  requirements that all new apps and updates targeting Android 15+ [must support 16 KB page sizes](https://android-developers.googleblog.com/2025/05/prepare-play-apps-for-devices-with-16kb-page-size.html).
   See [this announcement from Unity](https://discussions.unity.com/t/info-unity-engine-support-for-16-kb-memory-page-sizes-android-15/1589588) for more information.
 
 ### Unity 2022.3 LTS
 
+* For Android 8 and earlier, due to [issue #15](https://github.com/learntoflutter/flutter_embed_unity/issues/15), versions 2022.3.10 to 2022.3.18 inclusive are **NOT** supported
 * For iOS, as of 1st May 2024, 2022.3.21 or later is required due to App Store requirements around apps and 3rd party SDKs (including Unity) [declaring required reason API usage using Privacy Manifests](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api). See [this announcement from Unity](https://forum.unity.com/threads/apple-privacy-manifest-updates-for-unity-engine.1529026/) for more information.
-* For Android, as of November 1st 2025, 2022.3.56 is required due to Google Play
+* For Android, as of November 1st 2025, 2022.3.56 or later is required due to Google Play
  requirements that all new apps and updates targeting Android 15+ (SDK 35) [must support 16 KB page sizes](https://android-developers.googleblog.com/2025/05/prepare-play-apps-for-devices-with-16kb-page-size.html).
   See [this announcement from Unity](https://discussions.unity.com/t/info-unity-engine-support-for-16-kb-memory-page-sizes-android-15/1589588) for more information.
-* For Android 9 and later, any [Unity 2022.3 LTS](https://unity.com/releases/lts) is supported
-* For Android 8 and earlier, due to [issue #15](https://github.com/learntoflutter/flutter_embed_unity/issues/15), any version of Unity 2022.3 is supported **EXCEPT for 2022.3.10 to 2022.3.18** inclusive
+
 
 [Unity as a library](https://docs.unity3d.com/Manual/UnityasaLibrary.html) was only intended by Unity to be used fullscreen (running in it's own `UnityPlayerActivity.java` Activity on Android, or using `UnityAppController.mm` as the root UIViewController on iOS). By embedding Unity into a Flutter widget, this plugin breaks this assumption, making it quite delicate. It also calls undocumented functions written by Unity, and implements various workarounds, which is why this plugin will not work with different versions of Unity. If you need support for different versions, this package is [federated](https://docs.flutter.dev/packages-and-plugins/developing-packages#federated-plugins) to allow easier extension by contributors for different versions of Unity using alternate platform packages - [consult the wiki for help developing and contributing your own.](https://github.com/learntoflutter/flutter_embed_unity/wiki).
 
