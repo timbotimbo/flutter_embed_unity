@@ -1,3 +1,17 @@
+## 1.4.0
+
+27 Sep 2025
+
+* New feature: export Unity project from command line (thanks [@timbotimbo](https://github.com/timbotimbo)). See (Advanced: Export from the command line)[https://pub.dev/packages/flutter_embed_unity#advanced-export-from-the-command-line]
+* Fix (#56)[https://github.com/learntoflutter/flutter_embed_unity/issues/56]: Could not get unknown property 'unity.androidNdkPath' for project ':unityLibrary'
+* Fix (#51)[https://github.com/learntoflutter/flutter_embed_unity/issues/51]: EntryPointNotFoundException in SendToFlutter in Unity Editor play mode
+* Upgraded example Unity 6 project to 6000.0.58
+* Updated README with clarifications on what Unity versions are supported given that 16KB page sizes becoming mandatory when targeting Android 15+
+* Bump flutter_embed_unity_2022_3_android to 1.1.5 and flutter_embed_unity_6000_0_android to 1.2.3
+
+Building from command line and fixes for #56 and #51 require updating your .cs scripts in your Unity project using the latest `flutter_embed_unity_6000_0.unitypackage` or `flutter_embed_unity_2022_3.unitypackage` asset from [releases on Github](https://github.com/learntoflutter/flutter_embed_unity/releases)
+
+
 ## 1.3.1
 
 24 June 2025

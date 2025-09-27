@@ -1,3 +1,10 @@
+## 1.1.5
+
+27 Sep 2025
+
+* Upgraded example project to use Kotlin 2.1.21 instead of 1.8.22 (which will not be supported in future versions of Flutter)
+
+
 ## 1.1.4
 
 24 June 2025
