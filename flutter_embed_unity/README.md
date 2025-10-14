@@ -707,8 +707,10 @@ Or as a single line
 
 Unity will launch as an invisible (headless) instance in the background. It is important to include `-quit`, otherwise the headless Unity engine might stay active on your machine after the script aborts.
 
-Unity won't display logs and errors in the command line.
-You can find output in the [editor log](https://docs.unity3d.com/2022.3/Documentation/Manual/LogFiles.html) or add the argument `-logFile <path to file>` to log to a specific file.
+By default Unity won't display logs and errors in the command line. To view build logs, do one of the following:
+* View the output in the [editor log](https://docs.unity3d.com/2022.3/Documentation/Manual/LogFiles.html)
+* add the argument `-logFile <path to file>` to log to a specific file
+* add the argument `-logFile -` to output log to the console
 
 You might see the following on an exception, but you will need to check the logs for the exact message.
 ```
