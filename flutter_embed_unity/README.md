@@ -103,19 +103,30 @@ There is [an example Unity 2022.3 project](https://github.com/learntoflutter/flu
 
 
 ### Unity 6000.0 LTS
+* For Android, version 6000.0.58f2 or newer is required due to a [security update advisory](https://unity.com/security/sept-2025-01).
 
-* For Android, as of November 1st 2025, 6000.0.38 or later is required due to Google Play
+  <details>
+  <summary>Superseded version requirements. (click to expand)</summary>
+
+  * For Android, as of November 1st 2025, 6000.0.38 or later is required due to Google Play
  requirements that all new apps and updates targeting Android 15+ [must support 16 KB page sizes](https://android-developers.googleblog.com/2025/05/prepare-play-apps-for-devices-with-16kb-page-size.html).
   See [this announcement from Unity](https://discussions.unity.com/t/info-unity-engine-support-for-16-kb-memory-page-sizes-android-15/1589588) for more information.
+</details>  
+
 
 ### Unity 2022.3 LTS
 
-* For Android 8 and earlier, due to [issue #15](https://github.com/learntoflutter/flutter_embed_unity/issues/15), versions 2022.3.10 to 2022.3.18 inclusive are **NOT** supported
+* For Android, version 2022.3.62f2 or newer is required due to a [security update advisory](https://unity.com/security/sept-2025-01). For enterprise clients this is 2022.3.67f2 or newer.
 * For iOS, as of 1st May 2024, 2022.3.21 or later is required due to App Store requirements around apps and 3rd party SDKs (including Unity) [declaring required reason API usage using Privacy Manifests](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api). See [this announcement from Unity](https://forum.unity.com/threads/apple-privacy-manifest-updates-for-unity-engine.1529026/) for more information.
-* For Android, as of November 1st 2025, 2022.3.56 or later is required due to Google Play
+
+  <details>
+  <summary>Superseded version requirements. (click to expand) </summary>
+
+  * For Android 8 and earlier, due to [issue #15](https://github.com/learntoflutter/flutter_embed_unity/issues/15), versions 2022.3.10 to 2022.3.18 inclusive are **NOT** supported.
+  * For Android, as of November 1st 2025, 2022.3.56 or later is required due to Google Play
  requirements that all new apps and updates targeting Android 15+ (SDK 35) [must support 16 KB page sizes](https://android-developers.googleblog.com/2025/05/prepare-play-apps-for-devices-with-16kb-page-size.html).
   See [this announcement from Unity](https://discussions.unity.com/t/info-unity-engine-support-for-16-kb-memory-page-sizes-android-15/1589588) for more information.
-
+</details>
 
 [Unity as a library](https://docs.unity3d.com/Manual/UnityasaLibrary.html) was only intended by Unity to be used fullscreen (running in it's own `UnityPlayerActivity.java` Activity on Android, or using `UnityAppController.mm` as the root UIViewController on iOS). By embedding Unity into a Flutter widget, this plugin breaks this assumption, making it quite delicate. It also calls undocumented functions written by Unity, and implements various workarounds, which is why this plugin will not work with different versions of Unity. If you need support for different versions, this package is [federated](https://docs.flutter.dev/packages-and-plugins/developing-packages#federated-plugins) to allow easier extension by contributors for different versions of Unity using alternate platform packages - [consult the wiki for help developing and contributing your own.](https://github.com/learntoflutter/flutter_embed_unity/wiki).
 
@@ -147,7 +158,9 @@ Officially, [Unity is tested against the following dependencies](https://docs.un
 
 | Unity Version                     | Gradle Version  | Android Gradle Plug-in Version | NDK                  | JDK |
 |-----------------------------------|-----------------|--------------------------------|----------------------|-----|
-| 6000.0.45f1+ 	                    | 8.11            | 8.7.2                          | r27c (27.2.12479018) | 17  |
+| 6000.2 - 6000.3+                  | 8.13            | 8.10.0                         | r27c (27.2.12479018) | 17  |
+| 6000.0.61f1+                      | 8.13            | 8.10.0                         | r27c (27.2.12479018) | 17  |
+| 6000.0.45f1 - 6000.0.60f1         | 8.11            | 8.7.2                          | r27c (27.2.12479018) | 17  |
 | 6000.0.1f1 - 6000.0.44f1          | 8.4             | 8.3.0                          | r27c (27.2.12479018) | 17  |
 | 2022.3.38f1+                      | 7.5.1           | 7.4.2                          | r23b (23.1.7779620)  | 11  |
 | 2022.3.0f1 - 2022.3.37f1          | 7.2             | 7.1.2                          | r23b (23.1.7779620)  | 11  |
