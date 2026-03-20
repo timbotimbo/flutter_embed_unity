@@ -22,6 +22,6 @@ Embed Unity into an iOS Flutter app
   s.swift_version = '5.0'
   
   # Add UnityFramework
-  s.vendored_frameworks = 'UnityFramework.xcframework'
+  s.vendored_frameworks = 'flutter_embed_unity_2022_3_ios/UnityFramework.xcframework'
   # Converted UnityFramework.framework to .xcframework using `xcodebuild -create-xcframework -framework UnityFramework.framework -output UnityFramework.xcframework` 
 end
