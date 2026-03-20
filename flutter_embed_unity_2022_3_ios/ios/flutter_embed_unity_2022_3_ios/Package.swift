@@ -27,6 +27,8 @@ let package = Package(
             dependencies: [
                 // Mentioned as "new in Flutter 3.41" 
                // .product(name: "FlutterFramework", package: "FlutterFramework")
+
+               "UnityFramework"
             ],
             resources: [
                 // If your plugin requires a privacy manifest
@@ -40,6 +42,11 @@ let package = Package(
                 // the following instructions to add them:
                 // https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package
             ]
+        ),
+        .binaryTarget(
+            name: "UnityFramework",
+            path: "UnityFramework.xcframework"
+            // Converted UnityFramework.framework to .xcframework using `xcodebuild -create-xcframework -framework UnityFramework.framework -output UnityFramework.xcframework` 
         )
     ]
 )
