@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_embed_unity_2022_3_ios'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'iOS platform implementation of flutter_embed_unity plugin'
   s.description      = <<-DESC
 Embed Unity into an iOS Flutter app
@@ -13,7 +13,7 @@ Embed Unity into an iOS Flutter app
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Learn To Flutter' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'flutter_embed_unity_2022_3_ios/Sources/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 
