@@ -66,6 +66,9 @@ internal class ProjectExporterIos : ProjectExporter
             Debug.LogError("Could not find the 'Data' folder in the `Unity-iPhone project.");
         }
 
+        // experimental Swift Package Manager
+        // CreateXCFrameworkBuildPhase(pbxProject);
+        
         // Save changes
         pbxProject.WriteToFile(pbxProjFileInfo.FullName);
 
@@ -77,6 +80,47 @@ internal class ProjectExporterIos : ProjectExporter
         }
 
         Debug.Log("Transforming Unity export for Flutter integration complete");
+    }
+
+    // experimental post-build step for Swift Package Manager.
+    protected void CreateXCFrameworkBuildPhase(PBXProject pbxProject)
+    {
+        // Add a Build Phase to Unity-iPhone -> UnityFramework
+        // When building Unity-iPhone, this converts the output UnityFramework.framework to .xcframework.
+        // This format is required for Swift Package Manager.
+
+        string frameworkTarget = pbxProject.GetUnityFrameworkTargetGuid();
+        // shell script
+        string script = @"
+set -e # exit on failure
+
+echo ""Creating UnityFramework.xcframework""
+
+# these _DIR are Xcode env variables
+FRAMEWORK_PATH=""${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}""
+OUTPUT_DIR=""${PROJECT_DIR}/../UnityFramework""
+OUTPUT_PATH=""${OUTPUT_DIR}/UnityFramework.xcframework""
+
+mkdir -p ""${OUTPUT_DIR}""
+rm -rf ""${OUTPUT_PATH}""
+
+if [ ! -d ""${FRAMEWORK_PATH}"" ]; then
+    echo ""UnityFramework not found at ${FRAMEWORK_PATH}""
+    exit 1
+fi
+
+xcodebuild -create-xcframework \
+    -framework ""${FRAMEWORK_PATH}"" \
+    -output ""${OUTPUT_PATH}""
+
+echo ""UnityFramework.xcframework created at ${OUTPUT_PATH}""
+";
+        pbxProject.AddShellScriptBuildPhase(
+            frameworkTarget,
+            "Create XCFramework - Flutter Embed Unity",
+            "/bin/sh",
+            script
+        );
     }
 }
 
