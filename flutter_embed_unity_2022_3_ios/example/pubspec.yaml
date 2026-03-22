@@ -26,3 +26,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  # Disable SPM for testing
+ 
+  #disable-swift-package-manager: true   # Flutter 3.24 -> 3.32
+  #config:                               # Flutter 3.35+
+    #enable-swift-package-manager: false
