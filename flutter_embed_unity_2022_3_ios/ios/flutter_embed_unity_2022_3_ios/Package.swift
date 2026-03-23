@@ -9,7 +9,7 @@ import PackageDescription
 let package = Package(
     name: "flutter_embed_unity_2022_3_ios",
     platforms: [
-        .iOS("12.0"),
+        .iOS(.v12),
     ],
     products: [
         // If the plugin name contains "_", replace with "-" for the library name.
@@ -43,7 +43,7 @@ let package = Package(
         ),
         .binaryTarget(
             name: "UnityFramework",
-            path: "UnityFramework.xcframework"
+            path: "UnityFrameworkStub.xcframework"
         )
     ]
 )
