@@ -2,6 +2,15 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint flutter_embed_unity_ios.podspec` to validate before publishing.
 #
+
+# This was added to check that the xcframework actually exists, because if it is not found
+# Cocoapods will silently ignore it
+framework_path = 'flutter_embed_unity_2022_3_ios/UnityFrameworkStubs/StaticFramework/UnityFramework.xcframework'
+unless File.exist?(framework_path)
+  # This will raise a visible error during 'pod install' or 'flutter run'
+  raise "Error running flutter_embed_unity_2022_3_ios.podspec: #{framework_path} not found"
+end
+
 Pod::Spec.new do |s|
   s.name             = 'flutter_embed_unity_2022_3_ios'
   s.version          = '0.0.1'
@@ -22,6 +31,7 @@ Embed Unity into an iOS Flutter app
   s.swift_version = '5.0'
   
   # Add UnityFramework
-  s.vendored_frameworks = 'flutter_embed_unity_2022_3_ios/UnityFramework.xcframework'
-  # Converted UnityFramework.framework to .xcframework using `xcodebuild -create-xcframework -framework UnityFramework.framework -output UnityFramework.xcframework` 
+  # Cocoapods requires the version of the UnityFramework static library which has been wrapped
+  # in a framework bundle, because it understands .framework structures
+  s.vendored_frameworks = framework_path
 end

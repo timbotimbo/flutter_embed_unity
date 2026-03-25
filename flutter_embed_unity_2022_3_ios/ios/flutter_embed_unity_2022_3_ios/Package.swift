@@ -43,7 +43,10 @@ let package = Package(
         ),
         .binaryTarget(
             name: "UnityFramework",
-            path: "UnityFrameworkStub.xcframework"
+            // SPM needs the version of the XCFramework stub which contains just a raw static 
+            // library (.a). The static framework version is used when building with Cocoapods, 
+            // which does not know how to handle this kind of static library
+            path: "UnityFrameworkStubs/StaticLibrary/UnityFramework.xcframework"
         )
     ]
 )
